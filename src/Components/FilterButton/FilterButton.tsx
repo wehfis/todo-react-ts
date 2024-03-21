@@ -1,5 +1,8 @@
-import { useState } from 'react'
-import styles from './styles/FilterButton.module.css'
+import { useState, useEffect } from 'react';
+import styles from './styles/FilterButton.module.css';
+import TaskModel from '../../Models/Task';
+import TaskAPI from '../../TaskAPI/TaskAPI';
+import { useTaskContext } from '../../Contexts/TaskContext';
 
 export enum FilterOptions {
     All = 'All',
@@ -8,34 +11,50 @@ export enum FilterOptions {
 }
 
 type FilterOptionsType = {
-    option: FilterOptions
-}
+    option: FilterOptions;
+};
 
-export default function FilterButton(filter: FilterOptionsType) {
-    const handleFilter = (
+export default function FilterButton(props: FilterOptionsType) {
+    const { tasks, setTasks, currentActiveFilter, setCurrentActiveFilter } =
+        useTaskContext();
+    const handleFilter = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
-    ): void => {
-        event.preventDefault()
-
-        const previousFilter = document.querySelector(`.${styles.filter_button_active}`);
-        if (previousFilter) {
-            previousFilter.classList.remove(styles.filter_button_active)
+    ) => {
+        event.preventDefault();
+        await filterTasks();
+        setCurrentActiveFilter(props.option);
+    };
+    const filterTasks = async () => {
+        const currentTasks = await fetchData();
+         
+        switch (props.option) {
+            case FilterOptions.Active:
+                setTasks(currentTasks.filter((task) => !task.completed));
+                return;
+            case FilterOptions.Completed:
+                setTasks(currentTasks.filter((task) => task.completed));
+                return;
+            default:
+                setTasks(currentTasks);
+                return;
         }
-        event.currentTarget.classList.add(styles.filter_button_active)
-    }
+    };
+    const fetchData = async () => {
+        return await TaskAPI.getTasks();
+    };
 
     return (
         <>
             <button
                 onClick={handleFilter}
                 className={`${styles.filter_button} ${
-                    filter.option === FilterOptions.All
+                    props.option === currentActiveFilter
                         ? styles.filter_button_active
                         : ''
                 }`}
             >
-                {filter.option}
+                {props.option}
             </button>
         </>
-    )
+    );
 }

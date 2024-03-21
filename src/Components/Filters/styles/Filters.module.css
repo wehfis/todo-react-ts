@@ -16,6 +16,16 @@
     line-height: 1.4em;
     color: #777777;
 }
+.filters_text_fixed {
+    text-decoration: none;
+    width: 102px;
+    height: 20px;
+    margin: 0px;
+    padding: 12px;
+    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    line-height: 1.4em;
+    color: #777777;
+}
 
 a:hover {
     text-decoration: underline;

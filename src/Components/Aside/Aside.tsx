@@ -1,6 +1,6 @@
-import styles from './styles/Aside.module.css'
+import styles from './styles/Aside.module.css';
 
-type AsideProps = {}
+type AsideProps = {};
 
 export default function Aside(props: AsideProps) {
     return (
@@ -61,5 +61,5 @@ export default function Aside(props: AsideProps) {
                 </p>
             </div>
         </>
-    )
+    );
 }

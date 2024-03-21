@@ -1,8 +1,8 @@
-import styles from './styles/Footer.module.css'
+import styles from './styles/Footer.module.css';
 
 type FooterProps = {
-    comments: string[]
-} 
+    comments: string[];
+};
 
 export default function Footer(props: FooterProps) {
     return (

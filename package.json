@@ -42,6 +42,8 @@
     "@types/jest": "^27.5.2",
     "@types/node": "^16.18.89",
     "@types/react": "^18.2.65",
-    "@types/react-dom": "^18.2.22"
+    "@types/react-dom": "^18.2.22",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3"
   }
 }

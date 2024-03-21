@@ -1,4 +1,4 @@
 export default interface TaskDto {
-    text: string,
-    completed: boolean
+    text: string;
+    completed: boolean;
 }

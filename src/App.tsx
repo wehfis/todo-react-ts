@@ -1,39 +1,37 @@
-import Header from './Components/Header/Header'
-import Footer from './Components/Footer/Footer'
-import Aside from './Components/Aside/Aside'
-import TaskList from './Components/TaskList/TaskList'
-import styles from './App.module.css'
-import { useEffect, useState } from 'react'
-import TaskModel from './Models/Task'
-import TaskAPI from './TaskAPI/TaskAPI'
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
+import Aside from './Components/Aside/Aside';
+import TaskList from './Components/TaskList/TaskList';
+import styles from './App.module.css';
+import { useEffect, useState } from 'react';
+import TaskModel from './Models/Task';
+import TaskAPI from './TaskAPI/TaskAPI';
+import { headerProp, inputTextProp, footerProp } from './constants';
+import { useTaskContext } from './Contexts/TaskContext';
 
 export default function App() {
-    const [tasksPayload, setTasksPayload] = useState<TaskModel[]>([])
+    const { tasks, setTasks } = useTaskContext();
+    const [tasksLoaded, setTasksLoaded] = useState<boolean>(false);
 
-    // Move to constants.ts
-    const headerProp: string = 'todos'
-    const inputTextProp: string = 'What needs to be done?'
-    const footerProp: string[] = [
-        'Double-click to edit a todo',
-        'Credits: James Thomas, Ed Chatelain and Akira Sudoh',
-        'Part of TodoMVC',
-    ]
     const renderTask = async () => {
-        const tasks = await TaskAPI.getTasks()
-        setTasksPayload(tasks)
-    }
+        const tasks: TaskModel[] = await TaskAPI.getTasks();
+        setTasks(tasks);
+        setTasksLoaded(true);
+    };
     useEffect(() => {
-        renderTask()
-    }, [])
+        renderTask();
+    }, []);
 
     return (
         <div className={styles.page_wrapper}>
             <Aside />
             <Header header={headerProp} />
-            {tasksPayload.length > 0 && (
-                <TaskList inputText={inputTextProp} tasks={tasksPayload} />
+            {tasksLoaded ? (
+                <TaskList inputText={inputTextProp}/>
+            ) : (
+                <p>Loading tasks...</p>
             )}
             <Footer comments={footerProp} />
         </div>
-    )
+    );
 }
