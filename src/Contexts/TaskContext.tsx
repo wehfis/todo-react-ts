@@ -7,12 +7,14 @@ import React, {
 } from 'react';
 import TaskModel from '../Models/Task';
 import { FilterOptions } from '../Components/FilterButton/FilterButton';
+import TaskAPI from '../TaskAPI/TaskAPI';
 
 interface TaskContextType {
     currentActiveFilter: FilterOptions;
     tasks: TaskModel[];
     setCurrentActiveFilter: (filter: FilterOptions) => void;
     setTasks: (tasks: TaskModel[]) => void;
+    renderTasks: () => void;
 }
 
 const TaskContext = createContext<TaskContextType | undefined>(undefined);
@@ -33,6 +35,21 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
     const [currentActiveFilter, setCurrentActiveFilter] = useState(FilterOptions.All);
     const [tasks, setTasks] = useState<TaskModel[]>([]);
 
+    const renderTasks = async () => {
+        const newTasks = await TaskAPI.getTasks();
+        switch (currentActiveFilter) {
+            case FilterOptions.Active:
+                setTasks(newTasks.filter((task) => !task.completed));
+                return;
+            case FilterOptions.Completed:
+                setTasks(newTasks.filter((task) => task.completed));
+                return;
+            default:
+                setTasks(newTasks);
+                return;
+        }
+    }
+
     return (
         <TaskContext.Provider
             value={{
@@ -40,6 +57,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
                 tasks,
                 setCurrentActiveFilter,
                 setTasks,
+                renderTasks
             }}
         >
             {children}

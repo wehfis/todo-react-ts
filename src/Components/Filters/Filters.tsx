@@ -1,50 +1,39 @@
 import styles from './styles/Filters.module.css';
 import FilterButton from '../FilterButton/FilterButton';
 import { FilterOptions } from '../FilterButton/FilterButton';
-import { useEffect, useState } from 'react';
 import TaskAPI from '../../TaskAPI/TaskAPI';
-import TaskModel from '../../Models/Task';
 import { useTaskContext } from '../../Contexts/TaskContext';
+import TaskModel from '../../Models/Task';
+import { useEffect, useState } from 'react';
 
-type FilterProps = {
-    activeTasksQuantity: number;
-    filteredTasks: (tasks: TaskModel[]) => void;
-};
-
-export default function Filters(props: FilterProps) {
+export default function Filters() {
     const { tasks, setTasks, setCurrentActiveFilter } = useTaskContext();
-    const [activeItemQuantity, setActiveItemQuantity] = useState<number>(
-        props.activeTasksQuantity
-    );
-    const [itemQuantity, setItemQuantity] = useState<number>(0);
+    const [allTasks, setAllTasks] = useState<TaskModel[]>([]);
+
+    useEffect(() => {
+        const fetchTasks = async () => {
+            const tasks = await TaskAPI.getTasks();
+            setAllTasks(tasks);
+        };
+
+        fetchTasks();
+    }, [tasks]);
 
     const handleClearCompleted = async (
-        event: React.MouseEvent<HTMLAnchorElement, MouseEvent>
+        event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         event.preventDefault();
-        const tasks = await TaskAPI.getTasks();
-        tasks
+        allTasks
             .filter((task) => task.completed)
             .forEach(async (task) => await TaskAPI.removeTask(task.id));
-        setTasks(tasks.filter((task) => !task.completed));
-        setItemQuantity(tasks.length);
+        setTasks(allTasks.filter((task) => !task.completed));
         setCurrentActiveFilter(FilterOptions.All);
     };
 
-    useEffect(() => {
-        const fetchData = async () => {
-            const tasks = await TaskAPI.getTasks();
-            setItemQuantity(tasks.length);
-            setActiveItemQuantity(
-                tasks.filter((task) => !task.completed).length
-            );
-        };
-
-        fetchData();
-    }, [props.activeTasksQuantity, itemQuantity]);
-
-    const taskLeft = `${activeItemQuantity} ${
-        activeItemQuantity > 1 ? 'items left' : 'item left'
+    const taskLeft = `${allTasks.filter((task) => !task.completed).length} ${
+        allTasks.filter((task) => !task.completed).length > 1
+            ? 'items left'
+            : 'item left'
     }`;
     return (
         <>
@@ -53,17 +42,12 @@ export default function Filters(props: FilterProps) {
                 <FilterButton option={FilterOptions.All} />
                 <FilterButton option={FilterOptions.Active} />
                 <FilterButton option={FilterOptions.Completed} />
-                <a
+                <button
                     onClick={handleClearCompleted}
                     className={styles.filters_text_fixed}
-                    href=""
                 >
-                    {`${
-                        itemQuantity === activeItemQuantity
-                            ? ''
-                            : 'Clear completed'
-                    }`}
-                </a>
+                    {`${allTasks.length === allTasks.filter((task) => !task.completed).length ? '' : 'Clear completed'}`}
+                </button>
             </section>
         </>
     );

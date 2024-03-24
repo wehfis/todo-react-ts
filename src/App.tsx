@@ -10,16 +10,12 @@ import { headerProp, inputTextProp, footerProp } from './constants';
 import { useTaskContext } from './Contexts/TaskContext';
 
 export default function App() {
-    const { tasks, setTasks } = useTaskContext();
+    const { renderTasks } = useTaskContext();
     const [tasksLoaded, setTasksLoaded] = useState<boolean>(false);
 
-    const renderTask = async () => {
-        const tasks: TaskModel[] = await TaskAPI.getTasks();
-        setTasks(tasks);
-        setTasksLoaded(true);
-    };
     useEffect(() => {
-        renderTask();
+        renderTasks();
+        setTasksLoaded(true);
     }, []);
 
     return (

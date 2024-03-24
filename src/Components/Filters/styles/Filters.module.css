@@ -2,8 +2,11 @@
     display: grid;
     grid-auto-flow: column;
     border-top: 1px solid #dfdfdf;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2), 0 8px 0 -3px #f6f6f6,
-        0 9px 1px -3px rgba(0, 0, 0, 0.2), 0 16px 0 -6px #f6f6f6,
+    box-shadow:
+        0 1px 1px rgba(0, 0, 0, 0.2),
+        0 8px 0 -3px #f6f6f6,
+        0 9px 1px -3px rgba(0, 0, 0, 0.2),
+        0 16px 0 -6px #f6f6f6,
         0 17px 2px -6px rgba(0, 0, 0, 0.2);
     /* justify-self: center; */
 }
@@ -12,25 +15,34 @@
     text-decoration: none;
     margin: 0px;
     padding: 12px;
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font:
+        14px 'Helvetica Neue',
+        Helvetica,
+        Arial,
+        sans-serif;
     line-height: 1.4em;
     color: #777777;
 }
 .filters_text_fixed {
+    display: grid;
     text-decoration: none;
     width: 102px;
     height: 20px;
-    margin: 0px;
-    padding: 12px;
-    font: 14px 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 12px;
+    font:
+        14px 'Helvetica Neue',
+        Helvetica,
+        Arial,
+        sans-serif;
     line-height: 1.4em;
     color: #777777;
-}
-
-a:hover {
-    text-decoration: underline;
-}
-
-a {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
     justify-self: end;
+}
+
+.filters_text_fixed:hover {
+    text-decoration: underline;
 }

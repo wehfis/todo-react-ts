@@ -1,9 +1,17 @@
 import TaskDto from '../Dtos/Task';
 import TaskModel from '../Models/Task';
 import common from '../config';
+import { notification } from 'antd';
 
 export default class TaskAPI {
     static serverAPI = common.apiUrl;
+
+    static handleError(error: any, errorMessage: string) {
+        notification.error({
+            message: errorMessage,
+            description: error.message,
+        });
+    }
 
     static async completeAllTasks(tasks: TaskModel[]) {
         try {
@@ -14,7 +22,7 @@ export default class TaskAPI {
                 });
             });
         } catch (error) {
-            console.error(`ERROR FETCHING TASKS DATA: ${error}`);
+            TaskAPI.handleError(error, 'ERROR FETCHING TASKS DATA');
         }
     }
 
@@ -26,30 +34,33 @@ export default class TaskAPI {
                     completed: false,
                 });
             });
-        } catch (error) {
-            console.error(`ERROR FETCHING TASKS DATA: ${error}`);
+        } catch (error: any) {
+            TaskAPI.handleError(error, 'ERROR FETCHING TASKS DATA');
         }
     }
 
-    static async getTasks(): Promise<TaskModel[]> {
+    static async getTasks() {
         try {
             const response = await fetch(`${TaskAPI.serverAPI}/tasks`);
             return (await response.json()) as TaskModel[];
         } catch (error) {
-            console.error(`ERROR FETCHING TASKS DATA: ${error}`);
+            TaskAPI.handleError(error, 'ERROR FETCHING TASKS DATA');
             return [] as TaskModel[];
         }
     }
 
-    static async addTask(task: TaskDto) {
+    static async addTask(task: TaskDto): Promise<TaskModel> {
         try {
-            const taskBody: TaskModel = { id: Date.now().toString(), ...task };
+            const taskId: string = Date.now().toString();
+            const taskBody: TaskModel = { id: taskId, ...task };
             await fetch(`${TaskAPI.serverAPI}/tasks`, {
                 method: 'POST',
                 body: JSON.stringify(taskBody),
             });
+            return taskBody;
         } catch (error) {
-            console.error(`ERROR POSTING TASK: ${error}`);
+            TaskAPI.handleError(error, 'ERROR POSTING TASK');
+            return {} as TaskModel;
         }
     }
 
@@ -59,7 +70,7 @@ export default class TaskAPI {
                 method: 'DELETE',
             });
         } catch (error) {
-            console.error(`ERROR DELETING TASK: ${error}`);
+            TaskAPI.handleError(error, 'ERROR DELETING TASK');
         }
     }
 
@@ -70,18 +81,18 @@ export default class TaskAPI {
                 body: JSON.stringify({ id: taskId, ...newTask }),
             });
         } catch (error) {
-            console.error(`ERROR UPDATING TASK: ${error}`);
+            TaskAPI.handleError(error, 'ERROR UPDATING TASK');
         }
     }
 
-    static async getTaskById(taskId: string): Promise<TaskModel> {
+    static async getTaskById(taskId: string) {
         try {
             const response = await fetch(
                 `${TaskAPI.serverAPI}/tasks/${taskId}`
             );
             return (await response.json()) as TaskModel;
         } catch (error) {
-            console.error(`ERROR UPDATING TASK: ${error}`);
+            TaskAPI.handleError(error, 'ERROR UPDATING TASK');
             return {} as TaskModel;
         }
     }
