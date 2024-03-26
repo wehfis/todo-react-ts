@@ -3,35 +3,25 @@ import FilterButton from '../FilterButton/FilterButton';
 import { FilterOptions } from '../FilterButton/FilterButton';
 import TaskAPI from '../../TaskAPI/TaskAPI';
 import { useTaskContext } from '../../Contexts/TaskContext';
-import TaskModel from '../../Models/Task';
-import { useEffect, useState } from 'react';
 
 export default function Filters() {
-    const { tasks, setTasks, setCurrentActiveFilter } = useTaskContext();
-    const [allTasks, setAllTasks] = useState<TaskModel[]>([]);
-
-    useEffect(() => {
-        const fetchTasks = async () => {
-            const tasks = await TaskAPI.getTasks();
-            setAllTasks(tasks);
-        };
-
-        fetchTasks();
-    }, [tasks]);
+    const { tasks, setTasks, currentActiveFilter, setCurrentActiveFilter } = useTaskContext();
 
     const handleClearCompleted = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
     ) => {
         event.preventDefault();
-        allTasks
+        tasks
             .filter((task) => task.completed)
             .forEach(async (task) => await TaskAPI.removeTask(task.id));
-        setTasks(allTasks.filter((task) => !task.completed));
-        setCurrentActiveFilter(FilterOptions.All);
+        setTasks(tasks.filter((task) => !task.completed));
+        if (currentActiveFilter !== FilterOptions.All) {
+            setCurrentActiveFilter(FilterOptions.All);
+        }
     };
 
-    const taskLeft = `${allTasks.filter((task) => !task.completed).length} ${
-        allTasks.filter((task) => !task.completed).length > 1
+    const taskLeft = `${tasks.filter((task) => !task.completed).length} ${
+        tasks.filter((task) => !task.completed).length > 1
             ? 'items left'
             : 'item left'
     }`;
@@ -46,7 +36,7 @@ export default function Filters() {
                     onClick={handleClearCompleted}
                     className={styles.filters_text_fixed}
                 >
-                    {`${allTasks.length === allTasks.filter((task) => !task.completed).length ? '' : 'Clear completed'}`}
+                    {`${tasks.length === tasks.filter((task) => !task.completed).length ? '' : 'Clear completed'}`}
                 </button>
             </section>
         </>

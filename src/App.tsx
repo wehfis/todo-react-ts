@@ -23,7 +23,7 @@ export default function App() {
             <Aside />
             <Header header={headerProp} />
             {tasksLoaded ? (
-                <TaskList inputText={inputTextProp}/>
+                <TaskList inputPlaceholder={inputTextProp}/>
             ) : (
                 <p>Loading tasks...</p>
             )}

@@ -6,21 +6,21 @@ import Filters from '../Filters/Filters';
 import { useTaskContext } from '../../Contexts/TaskContext';
 
 type TaskListProps = {
-    inputText: string;
+    inputPlaceholder: string;
 };
 
 export default function TaskList(props: TaskListProps) {
-    const { tasks, setTasks } = useTaskContext();
+    const { filteredTasks } = useTaskContext();
 
-    const taskCards = tasks.map((task: TaskModel) => (
-        <TaskCard task={task} />
+    const taskCards = filteredTasks.map((task: TaskModel) => (
+        <TaskCard key={task.id} task={task} />
     ));
 
     return (
         <>
             <form className={styles.tasklist_form}>
-                <TaskInput inputText={props.inputText}/>
-                {tasks.length > 0 && (
+                <TaskInput inputPlaceholder={props.inputPlaceholder}/>
+                {filteredTasks.length > 0 && (
                     <ul className={styles.tasklist_list}>{taskCards}</ul>
                 )}
                 <Filters/>
