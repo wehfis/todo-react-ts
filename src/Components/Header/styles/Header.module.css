@@ -1,0 +1,21 @@
+.header_container {
+    grid-area: header;
+}
+
+.header_text {
+    margin: 0px;
+    width: 100%;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    font-size: 100px;
+    font-weight: 100;
+    text-align: center;
+    color: rgba(175, 47, 47, 0.15);
+}
+
+.sub_header_text {
+    margin: auto;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-style: italic;
+    font-size: 22px;
+    font-weight: 400;
+}
