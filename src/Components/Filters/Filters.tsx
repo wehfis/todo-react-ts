@@ -3,9 +3,10 @@ import FilterButton from '../FilterButton/FilterButton';
 import { FilterOptions } from '../FilterButton/FilterButton';
 import TaskAPI from '../../TaskAPI/TaskAPI';
 import { useTaskContext } from '../../Contexts/TaskContext';
+import React from 'react';
 
-export default function Filters() {
-    const { tasks, setTasks, currentActiveFilter, setCurrentActiveFilter } = useTaskContext();
+function Filters() {
+    const { tasks, setTasks } = useTaskContext();
 
     const handleClearCompleted = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -15,9 +16,6 @@ export default function Filters() {
             .filter((task) => task.completed)
             .forEach(async (task) => await TaskAPI.removeTask(task.id));
         setTasks(tasks.filter((task) => !task.completed));
-        if (currentActiveFilter !== FilterOptions.All) {
-            setCurrentActiveFilter(FilterOptions.All);
-        }
     };
 
     const taskLeft = `${tasks.filter((task) => !task.completed).length} ${
@@ -42,3 +40,4 @@ export default function Filters() {
         </>
     );
 }
+export default React.memo(Filters);

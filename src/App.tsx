@@ -4,12 +4,11 @@ import Aside from './Components/Aside/Aside';
 import TaskList from './Components/TaskList/TaskList';
 import styles from './App.module.css';
 import { useEffect, useState } from 'react';
-import TaskModel from './Models/Task';
-import TaskAPI from './TaskAPI/TaskAPI';
 import { headerProp, inputTextProp, footerProp } from './constants';
 import { useTaskContext } from './Contexts/TaskContext';
+import React from 'react';
 
-export default function App() {
+function App() {
     const { renderTasks } = useTaskContext();
     const [tasksLoaded, setTasksLoaded] = useState<boolean>(false);
 
@@ -31,3 +30,5 @@ export default function App() {
         </div>
     );
 }
+
+export default React.memo(App);

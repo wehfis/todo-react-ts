@@ -1,10 +1,11 @@
+import React from 'react';
 import styles from './styles/Footer.module.css';
 
 type FooterProps = {
     comments: string[];
 };
 
-export default function Footer(props: FooterProps) {
+function Footer(props: FooterProps) {
     return (
         <div className={styles.footer}>
             {props.comments.map((comment) => (
@@ -13,3 +14,5 @@ export default function Footer(props: FooterProps) {
         </div>
     );
 }
+
+export default React.memo(Footer);

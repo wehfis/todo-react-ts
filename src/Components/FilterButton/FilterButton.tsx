@@ -1,5 +1,6 @@
 import styles from './styles/FilterButton.module.css';
 import { useTaskContext } from '../../Contexts/TaskContext';
+import React from 'react';
 
 export enum FilterOptions {
     All = 'All',
@@ -11,7 +12,7 @@ type FilterOptionsType = {
     option: FilterOptions;
 };
 
-export default function FilterButton(props: FilterOptionsType) {
+function FilterButton(props: FilterOptionsType) {
     const { currentActiveFilter, setCurrentActiveFilter } = useTaskContext();
     const handleFilter = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -35,3 +36,5 @@ export default function FilterButton(props: FilterOptionsType) {
         </>
     );
 }
+
+export default React.memo(FilterButton);

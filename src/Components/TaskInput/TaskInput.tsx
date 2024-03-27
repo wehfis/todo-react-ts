@@ -2,12 +2,13 @@ import styles from './styles/TaskInput.module.css';
 import { useState } from 'react';
 import { useTaskContext } from '../../Contexts/TaskContext';
 import TaskDto from '../../Dtos/Task';
+import React from 'react';
 
 type TaskInputProps = {
     inputPlaceholder: string;
 };
 
-export default function TaskList(props: TaskInputProps) {
+function TaskInput(props: TaskInputProps) {
     const { completeAll, createTask } = useTaskContext();
     const [taskInputValue, setTaskInputValue] = useState('');
 
@@ -38,3 +39,5 @@ export default function TaskList(props: TaskInputProps) {
         </>
     );
 }
+
+export default React.memo(TaskInput);

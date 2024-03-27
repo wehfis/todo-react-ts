@@ -4,12 +4,13 @@ import TaskInput from '../TaskInput/TaskInput';
 import TaskModel from '../../Models/Task';
 import Filters from '../Filters/Filters';
 import { useTaskContext } from '../../Contexts/TaskContext';
+import React from 'react';
 
 type TaskListProps = {
     inputPlaceholder: string;
 };
 
-export default function TaskList(props: TaskListProps) {
+function TaskList(props: TaskListProps) {
     const { filteredTasks } = useTaskContext();
 
     const taskCards = filteredTasks.map((task: TaskModel) => (
@@ -28,3 +29,5 @@ export default function TaskList(props: TaskListProps) {
         </>
     );
 }
+
+export default React.memo(TaskList);

@@ -3,12 +3,13 @@ import TaskModel from '../../Models/Task';
 import { useState } from 'react';
 import { useTaskContext } from '../../Contexts/TaskContext';
 import TaskCheckbox from './TaskCheckbox';
+import React from 'react';
 
 type TaskCardProps = {
     task: TaskModel;
 };
 
-export default function TaskCard(props: TaskCardProps) {
+function TaskCard(props: TaskCardProps) {
     const { renderTasks, updateTask, deleteTask } = useTaskContext();
     const [cardHover, setCardHover] = useState(false);
 
@@ -51,3 +52,5 @@ export default function TaskCard(props: TaskCardProps) {
         </>
     );
 }
+
+export default React.memo(TaskCard);

@@ -1,12 +1,13 @@
 import styles from './styles/TaskCard.module.css';
 import TaskModel from '../../Models/Task';
+import React from 'react';
 
 type TaskCheckboxProps = {
     task: TaskModel;
     toggleCompleted: () => void;
 };
 
-export default function TaskCheckbox(props: TaskCheckboxProps) {
+function TaskCheckbox(props: TaskCheckboxProps) {
     return (
         <>
             <input
@@ -29,3 +30,5 @@ export default function TaskCheckbox(props: TaskCheckboxProps) {
         </>
     );
 }
+
+export default React.memo(TaskCheckbox);

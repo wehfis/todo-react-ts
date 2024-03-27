@@ -1,3 +1,4 @@
+import React from 'react';
 import styles from './styles/Header.module.css';
 
 type HeaderProps = {
@@ -5,7 +6,7 @@ type HeaderProps = {
     comment?: string;
 };
 
-export default function Header(props: HeaderProps) {
+function Header(props: HeaderProps) {
     return (
         <>
             <div className={styles.header_container}>
@@ -17,3 +18,5 @@ export default function Header(props: HeaderProps) {
         </>
     );
 }
+
+export default React.memo(Header);

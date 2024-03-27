@@ -1,8 +1,9 @@
+import React from 'react';
 import styles from './styles/Aside.module.css';
 
 type AsideProps = {};
 
-export default function Aside(props: AsideProps) {
+function Aside(props: AsideProps) {
     return (
         <>
             <div className={styles.aside_container}>
@@ -63,3 +64,5 @@ export default function Aside(props: AsideProps) {
         </>
     );
 }
+
+export default React.memo(Aside);
