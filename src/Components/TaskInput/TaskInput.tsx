@@ -9,7 +9,7 @@ type TaskInputProps = {
 };
 
 function TaskInput(props: TaskInputProps) {
-    const { completeAll, createTask } = useTaskContext();
+    const { completeAll, createTask, renderTasks } = useTaskContext();
     const [taskInputValue, setTaskInputValue] = useState('');
 
     const addTask = async (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -18,15 +18,19 @@ function TaskInput(props: TaskInputProps) {
                 text: taskInputValue,
                 completed: false,
             };
-            createTask(newTask);
+            await createTask(newTask);
             setTaskInputValue('');
+            renderTasks();
         }
     };
 
     return (
         <>
             <label
-                onClick={completeAll}
+                onClick={async () => {
+                    await completeAll();
+                    renderTasks();
+                }}
                 className={styles.tasklist_complete_all}
             ></label>
             <input

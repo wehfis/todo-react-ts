@@ -13,7 +13,6 @@ function App() {
     const [tasksLoaded, setTasksLoaded] = useState<boolean>(false);
 
     useEffect(() => {
-        renderTasks();
         setTasksLoaded(true);
     }, []);
 

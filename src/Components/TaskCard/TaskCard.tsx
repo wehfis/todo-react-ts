@@ -14,7 +14,7 @@ function TaskCard(props: TaskCardProps) {
     const [cardHover, setCardHover] = useState(false);
 
     const toggleCompleted = async () => {
-        updateTask(props.task.id, {
+        await updateTask(props.task.id, {
             ...props.task,
             completed: !props.task.completed,
         });
@@ -23,7 +23,7 @@ function TaskCard(props: TaskCardProps) {
 
     return (
         <>
-            <TaskCheckbox task={props.task} toggleCompleted={toggleCompleted}/>
+            <TaskCheckbox task={props.task} toggleCompleted={toggleCompleted} />
             <li
                 onMouseEnter={() => setCardHover(true)}
                 onMouseLeave={() => setCardHover(false)}
@@ -42,7 +42,10 @@ function TaskCard(props: TaskCardProps) {
                 </div>
                 {cardHover && (
                     <span
-                        onClick={() => deleteTask(props.task.id)}
+                        onClick={async () => {
+                            await deleteTask(props.task.id);
+                            renderTasks();
+                        }}
                         className={styles.card_delete}
                     >
                         ✖

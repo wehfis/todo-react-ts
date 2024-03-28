@@ -4,6 +4,8 @@ import React, {
     useContext,
     useEffect,
     useState,
+    useCallback,
+    useMemo,
 } from 'react';
 import TaskModel from '../Models/Task';
 import { FilterOptions } from '../Components/FilterButton/FilterButton';
@@ -47,42 +49,45 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
     const [filteredTasks, setFilteredTasks] = useState<TaskModel[]>([]);
     const { showBoundary } = useErrorBoundary();
 
-    useEffect(() => {
-        renderTasks();
-    }, [currentActiveFilter, tasks, filteredTasks]);
-
-    const renderTasks = async () => {
+    const renderTasks = useCallback(async () => {
         try {
             const newTasks = await TaskAPI.getTasks();
-            setTasks(newTasks);
             switch (currentActiveFilter) {
                 case FilterOptions.Active:
                     setFilteredTasks(
                         newTasks.filter((task) => !task.completed)
                     );
-                    return;
+                    break;
                 case FilterOptions.Completed:
                     setFilteredTasks(newTasks.filter((task) => task.completed));
-                    return;
+                    break;
                 default:
                     setFilteredTasks(newTasks);
-                    return;
+                    break;
             }
+            setTasks(newTasks);
         } catch (error: any) {
             showBoundary(error);
         }
-    };
+    }, [currentActiveFilter, showBoundary]);
 
-    const deleteTask = async (taskId: string) => {
-        try {
-            await TaskAPI.removeTask(taskId);
-            setTasks(tasks.filter((task) => task.id !== taskId));
-        } catch (error: any) {
-            return showBoundary(error);
-        }
-    };
+    useEffect(() => {
+        renderTasks();
+    }, [currentActiveFilter]);
 
-    const completeAll = async () => {
+    const deleteTask = useCallback(
+        async (taskId: string) => {
+            try {
+                await TaskAPI.removeTask(taskId);
+                setTasks(tasks.filter((task) => task.id !== taskId));
+            } catch (error: any) {
+                return showBoundary(error);
+            }
+        },
+        [tasks, showBoundary]
+    );
+
+    const completeAll = useCallback(async () => {
         try {
             if (tasks.every((task) => task.completed)) {
                 await inCompleteAll();
@@ -97,8 +102,9 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
         } catch (error: any) {
             showBoundary(error);
         }
-    };
-    const inCompleteAll = async () => {
+    }, [tasks, showBoundary]);
+
+    const inCompleteAll = useCallback(async () => {
         try {
             setTasks(
                 tasks.map((task) => {
@@ -109,39 +115,62 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
         } catch (error: any) {
             showBoundary(error);
         }
-    };
-    const createTask = async (newTask: TaskDto) => {
-        try {
-            const createdTask = await TaskAPI.addTask(newTask);
-            setTasks([...tasks, createdTask]);
-        } catch (error: any) {
-            showBoundary(error);
-        }
-    };
-    const updateTask = async (taskId: string, task: TaskDto) => {
-        try {
-            await TaskAPI.updateTask(taskId, task);
-        } catch (error: any) {
-            showBoundary(error);
-        }
-    };
+    }, [tasks, showBoundary]);
+
+    const createTask = useCallback(
+        async (newTask: TaskDto) => {
+            try {
+                const createdTask = await TaskAPI.addTask(newTask);
+                setTasks([...tasks, createdTask]);
+            } catch (error: any) {
+                showBoundary(error);
+            }
+        },
+        [tasks, showBoundary]
+    );
+
+    const updateTask = useCallback(
+        async (taskId: string, task: TaskDto) => {
+            try {
+                await TaskAPI.updateTask(taskId, task);
+            } catch (error: any) {
+                showBoundary(error);
+            }
+        },
+        [showBoundary]
+    );
+
+    const memoizedContextValue = useMemo(
+        () => ({
+            currentActiveFilter,
+            tasks,
+            filteredTasks,
+            setCurrentActiveFilter,
+            setTasks,
+            setFilteredTasks,
+            renderTasks,
+            completeAll,
+            createTask,
+            updateTask,
+            deleteTask,
+        }),
+        [
+            currentActiveFilter,
+            tasks,
+            filteredTasks,
+            setCurrentActiveFilter,
+            setTasks,
+            setFilteredTasks,
+            renderTasks,
+            completeAll,
+            createTask,
+            updateTask,
+            deleteTask,
+        ]
+    );
 
     return (
-        <TaskContext.Provider
-            value={{
-                currentActiveFilter,
-                tasks,
-                filteredTasks,
-                setCurrentActiveFilter,
-                setTasks,
-                setFilteredTasks,
-                renderTasks,
-                completeAll,
-                createTask,
-                updateTask,
-                deleteTask,
-            }}
-        >
+        <TaskContext.Provider value={memoizedContextValue}>
             {children}
         </TaskContext.Provider>
     );

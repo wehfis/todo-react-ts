@@ -1,12 +1,15 @@
 import styles from './styles/Filters.module.css';
 import FilterButton from '../FilterButton/FilterButton';
 import { FilterOptions } from '../FilterButton/FilterButton';
-import TaskAPI from '../../TaskAPI/TaskAPI';
 import { useTaskContext } from '../../Contexts/TaskContext';
 import React from 'react';
 
 function Filters() {
-    const { tasks, setTasks } = useTaskContext();
+    const {
+        tasks,
+        renderTasks,
+        deleteTask,
+    } = useTaskContext();
 
     const handleClearCompleted = async (
         event: React.MouseEvent<HTMLButtonElement, MouseEvent>
@@ -14,8 +17,8 @@ function Filters() {
         event.preventDefault();
         tasks
             .filter((task) => task.completed)
-            .forEach(async (task) => await TaskAPI.removeTask(task.id));
-        setTasks(tasks.filter((task) => !task.completed));
+            .forEach(async (task) => await deleteTask(task.id));
+        renderTasks();
     };
 
     const taskLeft = `${tasks.filter((task) => !task.completed).length} ${

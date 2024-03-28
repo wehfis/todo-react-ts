@@ -1,9 +1,7 @@
 import React from 'react';
 import styles from './styles/Aside.module.css';
 
-type AsideProps = {};
-
-function Aside(props: AsideProps) {
+function Aside() {
     return (
         <>
             <div className={styles.aside_container}>
