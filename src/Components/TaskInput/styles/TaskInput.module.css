@@ -36,3 +36,21 @@
     content: '❯';
     transform: rotate(90deg);
 }
+
+.tasklist_complete_all_pressed {
+    width: 50px;
+    height: 65px;
+    color: #888888;
+    position: absolute;
+    text-align: center;
+    font-size: 22px;
+    display: grid;
+    align-items: center;
+    justify-content: center;
+}
+
+.tasklist_complete_all_pressed::before {
+    display: inline-block;
+    content: '❯';
+    transform: rotate(90deg);
+}

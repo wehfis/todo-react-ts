@@ -11,7 +11,7 @@ type TaskListProps = {
 };
 
 function TaskList(props: TaskListProps) {
-    const { filteredTasks } = useTaskContext();
+    const { tasks, filteredTasks } = useTaskContext();
 
     const taskCards = filteredTasks.map((task: TaskModel) => (
         <TaskCard key={task.id} task={task} />
@@ -20,11 +20,11 @@ function TaskList(props: TaskListProps) {
     return (
         <>
             <form className={styles.tasklist_form}>
-                <TaskInput inputPlaceholder={props.inputPlaceholder}/>
+                <TaskInput inputPlaceholder={props.inputPlaceholder} />
                 {filteredTasks.length > 0 && (
                     <ul className={styles.tasklist_list}>{taskCards}</ul>
                 )}
-                <Filters/>
+                {tasks.length > 0 && <Filters />}
             </form>
         </>
     );

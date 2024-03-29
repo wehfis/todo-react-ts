@@ -1,6 +1,7 @@
 import styles from './styles/TaskCard.module.css';
 import TaskModel from '../../Models/Task';
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useTaskContext } from '../../Contexts/TaskContext';
 
 type TaskCheckboxProps = {
     task: TaskModel;
@@ -8,6 +9,10 @@ type TaskCheckboxProps = {
 };
 
 function TaskCheckbox(props: TaskCheckboxProps) {
+    // const { tasks } = useTaskContext();
+    // useEffect(() => {
+
+    // }, []);
     return (
         <>
             <input
@@ -20,7 +25,7 @@ function TaskCheckbox(props: TaskCheckboxProps) {
             <label htmlFor="task" className={styles.label_checkbox}>
                 {props.task.completed && (
                     <span
-                        onClick={props.toggleCompleted}
+                        onClick={async() => await props.toggleCompleted()}
                         className={styles.checkmark}
                     >
                         ✓

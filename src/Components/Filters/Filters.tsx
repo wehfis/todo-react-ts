@@ -7,7 +7,6 @@ import React from 'react';
 function Filters() {
     const {
         tasks,
-        renderTasks,
         deleteTask,
     } = useTaskContext();
 
@@ -18,7 +17,6 @@ function Filters() {
         tasks
             .filter((task) => task.completed)
             .forEach(async (task) => await deleteTask(task.id));
-        renderTasks();
     };
 
     const taskLeft = `${tasks.filter((task) => !task.completed).length} ${

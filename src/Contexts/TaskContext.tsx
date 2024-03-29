@@ -79,7 +79,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
         async (taskId: string) => {
             try {
                 await TaskAPI.removeTask(taskId);
-                setTasks(tasks.filter((task) => task.id !== taskId));
+                await renderTasks();
             } catch (error: any) {
                 return showBoundary(error);
             }
@@ -89,39 +89,29 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
 
     const completeAll = useCallback(async () => {
         try {
-            if (tasks.every((task) => task.completed)) {
-                await inCompleteAll();
-                return;
+            const allTasksCompleted = tasks.every((task) => task.completed);
+            setTasks(
+                tasks.map((task) => ({
+                    ...task,
+                    completed: !allTasksCompleted,
+                }))
+            );
+            if (allTasksCompleted) {
+                await TaskAPI.inCompleteAllTasks(tasks);
+            } else {
+                await TaskAPI.completeAllTasks(tasks);
             }
-            setTasks(
-                tasks.map((task) => {
-                    return { ...task, completed: true };
-                })
-            );
-            await TaskAPI.completeAllTasks(tasks);
-        } catch (error: any) {
+            await renderTasks();
+        } catch (error) {
             showBoundary(error);
         }
-    }, [tasks, showBoundary]);
-
-    const inCompleteAll = useCallback(async () => {
-        try {
-            setTasks(
-                tasks.map((task) => {
-                    return { ...task, completed: false };
-                })
-            );
-            await TaskAPI.inCompleteAllTasks(tasks);
-        } catch (error: any) {
-            showBoundary(error);
-        }
-    }, [tasks, showBoundary]);
+    }, [tasks, showBoundary, renderTasks]);
 
     const createTask = useCallback(
         async (newTask: TaskDto) => {
             try {
-                const createdTask = await TaskAPI.addTask(newTask);
-                setTasks([...tasks, createdTask]);
+                await TaskAPI.addTask(newTask);
+                await renderTasks();
             } catch (error: any) {
                 showBoundary(error);
             }
@@ -133,11 +123,12 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
         async (taskId: string, task: TaskDto) => {
             try {
                 await TaskAPI.updateTask(taskId, task);
+                await renderTasks();
             } catch (error: any) {
                 showBoundary(error);
             }
         },
-        [showBoundary]
+        [tasks, showBoundary]
     );
 
     const memoizedContextValue = useMemo(

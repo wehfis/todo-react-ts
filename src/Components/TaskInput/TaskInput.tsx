@@ -1,5 +1,5 @@
 import styles from './styles/TaskInput.module.css';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTaskContext } from '../../Contexts/TaskContext';
 import TaskDto from '../../Dtos/Task';
 import React from 'react';
@@ -9,7 +9,7 @@ type TaskInputProps = {
 };
 
 function TaskInput(props: TaskInputProps) {
-    const { completeAll, createTask, renderTasks } = useTaskContext();
+    const { tasks, completeAll, createTask } = useTaskContext();
     const [taskInputValue, setTaskInputValue] = useState('');
 
     const addTask = async (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -20,19 +20,17 @@ function TaskInput(props: TaskInputProps) {
             };
             await createTask(newTask);
             setTaskInputValue('');
-            renderTasks();
         }
     };
 
     return (
         <>
-            <label
-                onClick={async () => {
-                    await completeAll();
-                    renderTasks();
-                }}
-                className={styles.tasklist_complete_all}
-            ></label>
+            {tasks.length > 0 && (
+                <label
+                    onClick={async () => await completeAll()}
+                    className={`${styles.tasklist_complete_all} ${tasks.every((task) => task.completed) ? styles.tasklist_complete_all_pressed : ''}`}
+                ></label>
+            )}
             <input
                 onKeyDown={addTask}
                 value={taskInputValue}

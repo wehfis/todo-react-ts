@@ -1,6 +1,6 @@
 import styles from './styles/TaskCard.module.css';
 import TaskModel from '../../Models/Task';
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTaskContext } from '../../Contexts/TaskContext';
 import TaskCheckbox from './TaskCheckbox';
 import React from 'react';
@@ -10,20 +10,19 @@ type TaskCardProps = {
 };
 
 function TaskCard(props: TaskCardProps) {
-    const { renderTasks, updateTask, deleteTask } = useTaskContext();
+    const { updateTask, deleteTask } = useTaskContext();
     const [cardHover, setCardHover] = useState(false);
 
-    const toggleCompleted = async () => {
+    const toggleCompleted = useCallback(async () => {
         await updateTask(props.task.id, {
             ...props.task,
             completed: !props.task.completed,
         });
-        renderTasks();
-    };
+    }, [props]);
 
     return (
         <>
-            <TaskCheckbox task={props.task} toggleCompleted={toggleCompleted} />
+            <TaskCheckbox task={props.task} toggleCompleted={async () => await toggleCompleted()} />
             <li
                 onMouseEnter={() => setCardHover(true)}
                 onMouseLeave={() => setCardHover(false)}
@@ -40,17 +39,13 @@ function TaskCard(props: TaskCardProps) {
                         {props.task.text}
                     </label>
                 </div>
-                {cardHover && (
                     <span
-                        onClick={async () => {
-                            await deleteTask(props.task.id);
-                            renderTasks();
-                        }}
+                        onClick={async () => await deleteTask(props.task.id)}
                         className={styles.card_delete}
-                    >
-                        ✖
+                >
+                    {cardHover &&
+                        '✖' }
                     </span>
-                )}
             </li>
         </>
     );

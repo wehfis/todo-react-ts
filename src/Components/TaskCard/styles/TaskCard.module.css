@@ -1,5 +1,7 @@
 .card_item {
     display: flex;
+    width: 500px;
+    word-wrap: break-word;
     padding: 16px 16px 16px 60px;
     list-style-type: none;
     color: #4d4d4d;
@@ -15,7 +17,7 @@
 }
 
 .card_section {
-    width: 100%;
+    width: 475px;
     height: 100%;
 }
 
@@ -50,6 +52,8 @@
 }
 
 .card_delete {
+    width: 20px;
+    height: 20px;
     color: rgba(175, 47, 47, 0.3);
     cursor: pointer;
 }
