@@ -62,3 +62,18 @@
     color: rgba(175, 47, 47, 0.6);
     cursor: pointer;
 }
+
+.edit_input{
+    color: #4d4d4d;
+    width: 97%;
+    height: 100%;
+    line-height: 1.2em;
+    font-size: 24px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    outline: none;
+}
+
+.edit_input:focus{
+    border: 1px solid grey;
+    border-radius: 0;
+}
