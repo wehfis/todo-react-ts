@@ -37,6 +37,12 @@ function TaskCard(props: TaskCardProps) {
             setIsEditing(false);
         }
     };
+
+    const handleSaveKey = async (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            await handleUpdateTask();
+        }
+    }
     
     
     return (
@@ -54,11 +60,7 @@ function TaskCard(props: TaskCardProps) {
                             type="text"
                             value={editedText}
                             onChange={(e) => setEditedText(e.target.value)}
-                            onKeyDown={async (e) => {
-                                if (e.key === 'Enter') {
-                                    await handleUpdateTask();
-                                }
-                            }}
+                            onKeyDown={async (e) => handleSaveKey(e)}
                             onBlur={async () => await handleUpdateTask()}
                             autoFocus
                         />

@@ -9,10 +9,7 @@ type TaskCheckboxProps = {
 };
 
 function TaskCheckbox(props: TaskCheckboxProps) {
-    // const { tasks } = useTaskContext();
-    // useEffect(() => {
-
-    // }, []);
+    
     return (
         <>
             <input
