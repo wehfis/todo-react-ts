@@ -1,11 +1,31 @@
+import Header from './Components/Header/Header';
+import Footer from './Components/Footer/Footer';
+import Aside from './Components/Aside/Aside';
+import TaskList from './Components/TaskList/TaskList';
+import styles from './App.module.css';
+import { useEffect, useState } from 'react';
+import { headerProp, inputTextProp, footerProp } from './constants';
+import React from 'react';
 
 function App() {
-  return (
-    <div className="App">
-      <h1>TODO</h1>
-      <p>just DO it!</p>
-    </div>
-  );
+    const [tasksLoaded, setTasksLoaded] = useState<boolean>(false);
+
+    useEffect(() => {
+        setTasksLoaded(true);
+    }, []);
+
+    return (
+        <div className={styles.page_wrapper}>
+            <Aside />
+            <Header header={headerProp} />
+            {tasksLoaded ? (
+                <TaskList inputPlaceholder={inputTextProp}/>
+            ) : (
+                <p>Loading tasks...</p>
+            )}
+            <Footer comments={footerProp} />
+        </div>
+    );
 }
 
-export default App;
+export default React.memo(App);
